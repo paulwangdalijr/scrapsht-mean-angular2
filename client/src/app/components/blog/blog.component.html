@@ -1,0 +1,106 @@
+<h1 class='page-header'>Sh##t feed</h1>
+
+<div class="show-hide-message">
+    <div [ngClass]="messageClass">
+        {{message}}
+    </div>
+</div>
+
+<button type="button" name="button" class="btn btn-warning btn-sm" *ngIf="!newPost"
+(click)="newBlogForm()">New Post</button>
+<button [disabled]="loadingBlog" type="button" name="button" class="btn btn-default btn-sm" *ngIf="!newPost"
+(click)="reloadBlog()">Reload</button>
+
+<form [formGroup]="form" name="blogForm" (submit)="onBlogSubmit()" *ngIf="newPost">
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" name="title" class="form-control" autocomplete="off" placeholder="*Title (5 to 50 characters)" formControlName="title"
+        [ngClass]="{'is-invalid': form.controls.title.dirty && (form.controls.title.errors), 'is-valid': !form.controls.title.errors }"
+        >
+    </div>
+    <div class="form-group">
+        <textarea class="form-control" rows="3" placeholder="*Body (5 to 500 characters)"
+        formControlName="body"
+        [ngClass]="{'is-invalid': form.controls.body.dirty && (form.controls.body.errors), 'is-valid': !form.controls.body.errors }"
+        ></textarea>
+    </div>
+    <input [disabled]="!form.valid || processing" type="submit" class="btn btn-primary btn-sm" value="Submit" />
+    <button type="button" class="btn btn-danger btn-sm" (click)="onBlogCancel()">Back</button>
+</form>
+
+<!-- <div *ngIf="!newPost">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">Post Title</h3>
+        </div>
+        <div class="panel-body">
+            AklasjdaskjdKLJASDAS^%&*(p0aopokdsaldjasdnsakdhsajkxnasjdnsakjdn)
+        </div>
+        <div class="panel-footer">
+            <p><strong>Posted by </strong> Wang</p>
+            <p><strong>Date </strong> Dec. 12, 2012</p>
+            <div>
+                <p>
+                    <strong>Likes: </strong>9999
+                </p>
+                <p>
+                    <strong>Dislikes: </strong>6
+                </p>
+            </div>
+        </div>
+    </div>
+</div> -->
+<br><br>
+<div class="container" *ngIf="!newPost">
+    <div class="card mb-3" *ngFor="let blog of blogs">
+        <h4 class="card-header">{{blog.title}}</h4>
+        <!-- <img style="height: 200px; width: 100%; display: block;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22318%22%20height%3D%22180%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20318%20180%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_158bd1d28ef%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A16pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_158bd1d28ef%22%3E%3Crect%20width%3D%22318%22%20height%3D%22180%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22129.359375%22%20y%3D%2297.35%22%3EImage%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" alt="Card image"> -->
+        <div class="card-body">
+            <p class="card-text">{{blog.body}}</p>
+        </div>
+        <div class="card-footer text-muted">            
+            <a *ngIf="username === blog.createdBy" [routerLink]="['/edit-blog/', blog._id]"><button type="button" class="btn btn-info">Edit</button></a>
+            <a *ngIf="username === blog.createdBy" [routerLink]="['/delete-blog/', blog._id]"><button type="button" class="btn btn-danger">Delete</button></a>
+            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                <button type="button" class="btn btn-success">Like!</button>
+                <div class="btn-group show" role="group">
+                    <button type="button" class="btn btn-success dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop2" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 40px, 0px);">
+                        <a class="dropdown-item" href='#'>Wang1</a>
+                        <a class="dropdown-item" href='#'>Wang2</a>
+                        <a class="dropdown-item" href='#'>Wang3</a>
+                        <a class="dropdown-item" href='#'>Wang4</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                <button type="button" class="btn btn-danger">Dislike!</button>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-danger dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop4" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 40px, 0px);">
+                        <a class="dropdown-item" href='#'>Wang1</a>
+                        <a class="dropdown-item" href='#'>Wang2</a>
+                        <a class="dropdown-item" href='#'>Wang3</a>
+                        <a class="dropdown-item" href='#'>Wang4</a>
+                    </div>
+                </div>
+            </div>
+            <strong>Likes: </strong> {{blog.likes}}
+            <strong>Dislikes: </strong> {{blog.dislikes}}
+            <strong>Posted by: </strong> {{blog.createdBy}}
+            <strong>Date: </strong> {{blog.createdAt | date: 'MMM dd, yyyy'}}
+            <br>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <button type="button" class="btn btn-primary">Post Comment</button>
+                    <!-- <form>
+                        <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+                        <button type="button" class="btn btn-primary">Submit</button>
+                    </form> -->
+                </li>
+            </ul>
+
+        </div>    
+    </div>
+</div>

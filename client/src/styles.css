@@ -1,1 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
+
+html {
+    font-size: 25px;
+} 
+.card-footer button{
+	font-size: 20px;
+	line-height: 12px;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+}
+.card-footer .btn-group:nth-of-type(2){
+	margin-right: 10px;
+}
