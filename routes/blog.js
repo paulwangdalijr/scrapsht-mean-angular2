@@ -63,12 +63,98 @@ module.exports = (router) => {
                     if(!blog){
                         res.json({ success: false, message: "No blog found"});
                     }else{
-                        res.json({ success: true, blog});
+                        // res.json({ success: true, blog});
+
+                        User.findOne({ _id: req.decoded.userId }, (err, user) => {                        
+                            if(err || !user){
+                                res.json({ success: false, message: "User not authorized to update the blog."});
+                            }else{                 
+                                if(user.username !== blog.createdBy){
+                                    res.json({ success: false, message: "User not authorized to update the blog."});                                    
+                                }else{         
+                                    res.json({ success: true, blog});
+                                }
+                            }
+                        });
+
                     }
                 }
             });
         }else{
             res.json({ success: false, message: "No blog found"});
+        }
+    });
+
+    router.put('/updateBlog', (req, res)=>{
+        if(!req.body._id){
+            res.json({success: false, message: 'ID is required.'});
+        }else if(!req.body.title){
+            res.json({success: false, message: 'Title is required.'});
+        }else if(!req.body.body){
+            res.json({success: false, message: 'Body is required.'});       
+        // }else if(!req.body.createdBy){
+        //     res.json({success: false, message: 'CreatedBy is required.'});            
+        }else{
+
+            Blog.findOne({ _id: req.body._id}, (err,blog)=>{
+                if(err){
+                    res.json({success: false, message: 'ID is invalid.'});
+                }else if(!blog){
+                    res.json({success: false, message: 'Blog not found.'});
+                }else{                    
+                    User.findOne({ _id: req.decoded.userId }, (err, user) => {                        
+                        if(err || !user){
+                            res.json({ success: false, message: "User not authorized to update the blog."});
+                        }else{                 
+                            if(user.username !== blog.createdBy){
+                                res.json({ success: false, message: "User not authorized to update the blog."});
+                            }else{      
+                                blog.title = req.body.title;
+                                blog.body = req.body.body;
+                                blog.save((err)=>{
+                                    if(err){
+                                        res.json({success:false, message:err})  
+                                    }else{
+                                        res.json({success:true, message:"Blog updated!"})
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            });            
+        }
+    });
+
+    router.delete('/deleteBlog/:id', (req, res)=>{
+        if(req.params.id){
+            Blog.findOne({ _id: req.params.id}, (err,blog)=>{
+                if(err){
+                    res.json({success: false, message: 'ID is invalid.'});
+                }else if(!blog){
+                    res.json({success: false, message: 'Blog not found.'});
+                }else{                    
+                    User.findOne({ _id: req.decoded.userId }, (err, user) => {                        
+                        if(err || !user){
+                            res.json({ success: false, message: "User not authorized to delete the blog."});
+                        }else{                 
+                            if(user.username !== blog.createdBy){
+                                res.json({ success: false, message: "User not authorized to delete the blog."});
+                            }else{      
+                                blog.remove((err)=>{
+                                    if(err){
+                                        res.json({success:false, message:err})  
+                                    }else{
+                                        res.json({success:true, message:"Blog deleted!"})
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            });            
+        }else{
+            res.json({success: false, message: 'ID is blank.'});
         }
     });
 

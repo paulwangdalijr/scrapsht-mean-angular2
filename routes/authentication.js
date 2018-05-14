@@ -113,21 +113,7 @@ module.exports = (router) => {
                     res.json({success: false, message: 'Token invalid! ' + err});
                 }else{
                     req.decoded = decoded;
-                    // next();
-                    User.findOne({ _id: decoded.userId }, (err, user) => {                        
-                        if(err){
-                            res.json({success: false, message: 'Token invalid!'});
-                        }else{
-                            if(user){
-                                req.username = user.username;
-
-                                next();                                
-                            }else{
-                                res.json({success: false, message: 'Token invalid!'});
-                            }                            
-                        }
-                    });
-                    
+                    next();                                       
                 }
             });
         }

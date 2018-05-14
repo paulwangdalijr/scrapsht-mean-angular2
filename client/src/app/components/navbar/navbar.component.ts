@@ -15,7 +15,8 @@ export class NavbarComponent implements OnInit {
     public authService: AuthService,
     private router: Router,
     private flashMessagesService: FlashMessagesService
-  ) { }
+  ) { 
+  }
 
   onLogoutClick(){
     this.authService.logout();

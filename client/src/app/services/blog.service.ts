@@ -40,6 +40,16 @@ export class BlogService {
     return this.http.get(this.authService.domain + '/blogs/singleBlog/' + id, this.authService.options);
   }
 
+  updateBlog(blog){
+    this.authService.createAuthenticationHeaders();
+    return this.http.put(this.authService.domain + '/blogs/updateBlog', blog, this.authService.options);
+  }
+
+  deleteBlog(id){
+    this.authService.createAuthenticationHeaders();
+    return this.http.delete(this.authService.domain + '/blogs/deleteBlog/' + id, this.authService.options);
+  }
+
   alphaNumericValidation(controls){
     const regExp = new RegExp(
       /^[a-zA-Z0-9 ]+$/

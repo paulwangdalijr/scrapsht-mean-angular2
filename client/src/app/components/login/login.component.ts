@@ -75,7 +75,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     if (this.authGuard.redirectURL){
       this.messageClass = 'alert alert-danger';
-      this.message = "You must be logged in to view the page";
+      this.message = "Intruder alert! Verify yourself first!";
       this.previousUrl = this.authGuard.redirectURL;
       this.authGuard.redirectURL = undefined;
     }

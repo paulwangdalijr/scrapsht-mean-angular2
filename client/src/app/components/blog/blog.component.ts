@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { BlogService } from '../../services/blog.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-blog',
@@ -18,25 +19,31 @@ export class BlogComponent implements OnInit {
   processing = false;
   username ;
   blogs;
+  blogDeleteId;
+  blogDeleteTitle;
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private blogService: BlogService
+    private blogService: BlogService,
+    private router: Router
   ) { 
 
-    console.log("blog component constructor")
   }
 
   ngOnInit() {
 
     this.createNewBlogForm();
     this.authService.getProfile().subscribe((profile:any) => {
-      this.username = profile.user.username;
+      if(profile.success){
+        this.username = profile.user.username;
+      }else{
+        this.authService.logout();
+        this.router.navigate(['/']);
+      }
     })
 
     this.reloadBlog();
-    console.log("blog component onInit")
     // console.log(this.blogs);
   }
 
@@ -114,5 +121,17 @@ export class BlogComponent implements OnInit {
     // window.location.reload();
     this.newPost = false;
 
+  }
+
+
+  onDeleteBlog(blog:any){
+    this.blogDeleteId = blog._id; 
+    this.blogDeleteTitle = blog.title;
+  }
+  onConfirmDeleteBlog(){
+    this.blogService.deleteBlog(this.blogDeleteId).subscribe((data:any) => {
+      console.log(data.message)
+      this.reloadBlog();
+    });
   }
 }
