@@ -26,3 +26,6 @@ footer {
 #loginForm{
     font-size: 1px;
 }
+body{
+    overflow-y:scroll;
+}

@@ -55,6 +55,11 @@ export class BlogService {
     return this.http.put(this.authService.domain + '/blogs/postComment', blog, this.authService.options);
   }
 
+  likeDislike(blog){
+    this.authService.createAuthenticationHeaders();
+    return this.http.put(this.authService.domain + '/blogs/likeDislike', blog, this.authService.options);
+  }
+
 
   alphaNumericValidation(controls){
     const regExp = new RegExp(

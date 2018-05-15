@@ -76,7 +76,8 @@ const blogSchema = new Schema({
   comments: [
     { 
       comment: {type: String, validate: commentValidators },
-      commentBy: {type: String }
+      commentBy: {type: String },
+      commentAt: {type:Date, default: Date.now() }
     }
   ]
 });

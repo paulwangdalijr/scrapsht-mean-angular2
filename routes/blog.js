@@ -196,6 +196,65 @@ module.exports = (router) => {
         }
     });
 
+    router.put('/likeDislike', (req, res)=>{
+        if(!req.body._id){
+            res.json({success: false, message: 'ID is required.'});
+        // }else if(!req.body.action){
+        //     res.json({success: false, message: 'No action'});    
+            
+        // }else if(!req.body.createdBy){
+        //     res.json({success: false, message: 'CreatedBy is required.'});            
+        }else{
+
+            Blog.findOne({ _id: req.body._id}, (err,blog)=>{
+                if(err){
+                    res.json({success: false, message: 'ID is invalid.'});
+                }else if(!blog){
+                    res.json({success: false, message: 'Blog not found.'});
+                }else{                    
+                    User.findOne({ _id: req.decoded.userId }, (err, user) => {                        
+                        if(err || !user){
+                            res.json({ success: false, message: "Invalid user."});
+                        }else{                                                 
+                            if(req.body.action === 0){ //like
+                                if(blog.likedBy.includes(user.username)){    
+                                    res.json({ success: false, message: "User already liked this blog."});      
+                                    return;                          
+                                }else if(blog.dislikedBy.includes(user.username)){
+                                    blog.dislikes--;
+                                    const index = blog.dislikedBy.indexOf(user.username);
+                                    blog.dislikedBy.splice(index, 1);
+                                }else{ 
+                                }
+                                blog.likes++;
+                                blog.likedBy.push(user.username);    
+                            }else if(req.body.action === 1){ //dislike
+                                if(blog.likedBy.includes(user.username)){   
+                                    blog.likes--;
+                                    const index = blog.likedBy.indexOf(user.username);
+                                    blog.likedBy.splice(index, 1);      
+                                }else if(blog.dislikedBy.includes(user.username)){
+                                    res.json({ success: false, message: "User already disliked this blog."});  
+                                    return;                      
+                                }else{
+                                }
+                                blog.dislikes++;
+                                blog.dislikedBy.push(user.username);    
+                            }
+                            blog.save((err)=>{
+                                if(err){
+                                    res.json({success:false, message:err})  
+                                }else{
+                                    res.json({success:true, message:"Blog updated!"})
+                                }
+                            });
+                        }
+                    });
+                }
+            });            
+        }
+    });
+
 
     return router;
 }

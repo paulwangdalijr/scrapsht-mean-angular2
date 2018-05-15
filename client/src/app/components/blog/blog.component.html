@@ -75,7 +75,6 @@
 <div class="container" *ngIf="!newPost">
     <div class="card mb-3" *ngFor="let blog of blogs">
         <h4 class="card-header">{{blog.title}}</h4>
-        <!-- <img style="height: 200px; width: 100%; display: block;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22318%22%20height%3D%22180%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20318%20180%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_158bd1d28ef%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A16pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_158bd1d28ef%22%3E%3Crect%20width%3D%22318%22%20height%3D%22180%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22129.359375%22%20y%3D%2297.35%22%3EImage%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" alt="Card image"> -->
         <div class="card-body">
             <p class="card-text">{{blog.body}}</p>
         </div>
@@ -87,27 +86,31 @@
             <button *ngIf="username === blog.createdBy" type="button" class="btn btn-danger" (click)="onDeleteBlog(blog)" data-toggle="modal" data-target="#deleteModal">Delete</button>
 
             <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                <button type="button" class="btn btn-success">Like!</button>
+                <button type="button" class="btn btn-success" (click)="onClickLikeDislike(blog._id, 0, blog)"
+                [disabled]="blog.likedBy.includes(username)"
+                >Like!</button>
                 <div class="btn-group show" role="group">
-                    <button type="button" class="btn btn-success dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                    <button type="button" class="btn btn-success dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    [disabled]="!blog.likes"
+                    ></button>
                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop2" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 40px, 0px);">
-                        <a class="dropdown-item" href='#'>Wang1</a>
-                        <a class="dropdown-item" href='#'>Wang2</a>
-                        <a class="dropdown-item" href='#'>Wang3</a>
-                        <a class="dropdown-item" href='#'>Wang4</a>
+                        <span>Liked by:</span>
+                        <a *ngFor="let liked of blog.likedBy" class="dropdown-item" href='#'>{{liked}}</a>                    
                     </div>
                 </div>
             </div>
 
             <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                <button type="button" class="btn btn-danger">Dislike!</button>
+                <button type="button" class="btn btn-danger" (click)="onClickLikeDislike(blog._id, 1)"
+                [disabled]="blog.dislikedBy.includes(username)"
+                >Dislike!</button>
                 <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-danger dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                    <button type="button" class="btn btn-danger dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    [disabled]="!blog.dislikes"
+                    ></button>
                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop4" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 40px, 0px);">
-                        <a class="dropdown-item" href='#'>Wang1</a>
-                        <a class="dropdown-item" href='#'>Wang2</a>
-                        <a class="dropdown-item" href='#'>Wang3</a>
-                        <a class="dropdown-item" href='#'>Wang4</a>
+                        <span>Disliked by:</span>
+                        <a *ngFor="let disliked of blog.dislikedBy" class="dropdown-item" href='#'>{{disliked}}</a>   
                     </div>
                 </div>
             </div>
@@ -118,8 +121,8 @@
             <ul *ngIf="blog.comments[0]" class="list-group list-group-flush postcomments">
                 <li class="list-group-item comment-header"><p class="mb-0">Comments</p></li>
                 <li class="list-group-item post-comment-item">
-                    <p *ngFor="let comments of blog.comments" class="mb-0 text-primary">{{comments.comment}} -{{comments.commentBy}}</p>                    
-                    {{blog.newComment}}
+                    <p *ngFor="let comments of blog.comments" class="mb-0 text-primary">{{comments.comment}}
+                        -{{comments.commentBy}} @{{comments.commentAt | date: 'MMM dd, yyyy'}}
                 </li>
             </ul>
 

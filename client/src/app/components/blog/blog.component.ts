@@ -137,16 +137,25 @@ export class BlogComponent implements OnInit {
   }
 
   onClickPostComment(blog){
-    this.postCommentDisabled = true;
-    let tempBlog = {
-      _id: blog._id,
-      comment: blog.comment
+    if(blog.comment){
+      this.postCommentDisabled = true;
+      let tempBlog = {
+        _id: blog._id,
+        comment: blog.comment
+      }
+      this.blogService.postComment(tempBlog).subscribe((data:any) => {
+        this.reloadBlog()
+        this.postCommentDisabled = false;
+        blog.comment = ""
+      });
     }
-    this.blogService.postComment(blog).subscribe((data:any) => {
-      blog.newComment = blog.newComment + '<p class="mb-0 text-primary">' + blog.comment + ' -' + blog.username + '</p>'
-      console.log(blog);
-      this.postCommentDisabled = false;
-      blog.comment = ""
+  }
+  onClickLikeDislike(id, action, blog){
+    this.blogService.likeDislike({
+      _id: id,
+      action: action
+    }).subscribe((data:any)=>{
+      this.reloadBlog();
     });
   }
 }
