@@ -34,7 +34,6 @@ export class BlogComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.createNewBlogForm();
     this.authService.getProfile().subscribe((profile:any) => {
       if(profile.success){
@@ -158,4 +157,6 @@ export class BlogComponent implements OnInit {
       this.reloadBlog();
     });
   }
+
+
 }

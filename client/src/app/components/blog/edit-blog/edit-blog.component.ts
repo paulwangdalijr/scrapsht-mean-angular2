@@ -44,7 +44,7 @@ export class EditBlogComponent implements OnInit {
         this.enableBlogForm();
       }else{
         this.formShow = false;
-    		this.message = "Bad cheetah! This ain't blog yo";
+    		this.message = "Bad cheetah! This ain't yo blog";
         this.messageClass = "alert alert-danger";
       }
   	});
