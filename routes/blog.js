@@ -158,6 +158,44 @@ module.exports = (router) => {
         }
     });
 
+    router.put('/postComment', (req, res)=>{
+        if(!req.body._id){
+            res.json({success: false, message: 'ID is required.'});
+        }else if(!req.body.comment){
+            res.json({success: false, message: 'Comment is required.'});        
+        // }else if(!req.body.createdBy){
+        //     res.json({success: false, message: 'CreatedBy is required.'});            
+        }else{
+
+            Blog.findOne({ _id: req.body._id}, (err,blog)=>{
+                if(err){
+                    res.json({success: false, message: 'ID is invalid.'});
+                }else if(!blog){
+                    res.json({success: false, message: 'Blog not found.'});
+                }else{                    
+                    User.findOne({ _id: req.decoded.userId }, (err, user) => {                        
+                        if(err || !user){
+                            res.json({ success: false, message: "Invalid user."});
+                        }else{                                                 
+                            let comment = {
+                                comment: req.body.comment,
+                                commentBy: user.username                            
+                            }
+                            blog.comments.push(comment);
+                            blog.save((err)=>{
+                                if(err){
+                                    res.json({success:false, message:err})  
+                                }else{
+                                    res.json({success:true, message:"Blog updated!"})
+                                }
+                            });
+                        }
+                    });
+                }
+            });            
+        }
+    });
+
 
     return router;
 }

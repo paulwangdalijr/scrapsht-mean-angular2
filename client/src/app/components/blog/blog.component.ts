@@ -21,6 +21,8 @@ export class BlogComponent implements OnInit {
   blogs;
   blogDeleteId;
   blogDeleteTitle;
+  postCommentDisabled = false;
+  newComment = "";
 
   constructor(
     private formBuilder: FormBuilder,
@@ -44,7 +46,6 @@ export class BlogComponent implements OnInit {
     })
 
     this.reloadBlog();
-    // console.log(this.blogs);
   }
 
   newBlogForm(){
@@ -132,6 +133,20 @@ export class BlogComponent implements OnInit {
     this.blogService.deleteBlog(this.blogDeleteId).subscribe((data:any) => {
       console.log(data.message)
       this.reloadBlog();
+    });
+  }
+
+  onClickPostComment(blog){
+    this.postCommentDisabled = true;
+    let tempBlog = {
+      _id: blog._id,
+      comment: blog.comment
+    }
+    this.blogService.postComment(blog).subscribe((data:any) => {
+      blog.newComment = blog.newComment + '<p class="mb-0 text-primary">' + blog.comment + ' -' + blog.username + '</p>'
+      console.log(blog);
+      this.postCommentDisabled = false;
+      blog.comment = ""
     });
   }
 }

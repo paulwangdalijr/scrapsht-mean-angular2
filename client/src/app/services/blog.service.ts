@@ -50,6 +50,12 @@ export class BlogService {
     return this.http.delete(this.authService.domain + '/blogs/deleteBlog/' + id, this.authService.options);
   }
 
+  postComment(blog){
+    this.authService.createAuthenticationHeaders();
+    return this.http.put(this.authService.domain + '/blogs/postComment', blog, this.authService.options);
+  }
+
+
   alphaNumericValidation(controls){
     const regExp = new RegExp(
       /^[a-zA-Z0-9 ]+$/

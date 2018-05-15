@@ -14,9 +14,15 @@ html {
 }
 
 footer {
-    position: fixed;
+    /* position: fixed; */
     left: 20;
-    bottom: 10px;
+    bottom: 5px;
     width: 100%;
     font-size: 15px;
+}
+#sketchpad{
+    border: 2px solid black;
+}
+#loginForm{
+    font-size: 1px;
 }

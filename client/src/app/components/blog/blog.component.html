@@ -115,16 +115,18 @@
             <strong>Dislikes: </strong> {{blog.dislikes}}
             <strong>Posted by: </strong> {{blog.createdBy}}
             <strong>Date: </strong> {{blog.createdAt | date: 'MMM dd, yyyy'}}
-            <br>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    <button type="button" class="btn btn-primary">Post Comment</button>
-                    <!-- <form>
-                        <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-                        <button type="button" class="btn btn-primary">Submit</button>
-                    </form> -->
+            <ul *ngIf="blog.comments[0]" class="list-group list-group-flush postcomments">
+                <li class="list-group-item comment-header"><p class="mb-0">Comments</p></li>
+                <li class="list-group-item post-comment-item">
+                    <p *ngFor="let comments of blog.comments" class="mb-0 text-primary">{{comments.comment}} -{{comments.commentBy}}</p>                    
+                    {{blog.newComment}}
                 </li>
             </ul>
+
+            <div class="card-footer text-muted">
+                <textarea class="form-control" [(ngModel)]="blog.comment" rows="1"></textarea>
+                <button [disabled]="postCommentDisabled" type="button" class="btn btn-primary" (click)="onClickPostComment(blog)">Post Comment</button>
+            </div>
 
         </div>    
     </div>
